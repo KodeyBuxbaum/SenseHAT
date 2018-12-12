@@ -1,6 +1,6 @@
 from sense_hat import SenseHat
-from time import sleep
-from random import randint
+from time import *
+from random import *
 sense = SenseHat()
 
 #variables here-----------------------------------------
@@ -26,21 +26,22 @@ def move():
     next = list(last)
     if direction == "right":
         next[0] = last[0] + 1
-        sense.set_pixel(next[0], next[1], purple)
-        sense.set_pixel(last[0], last[1], blank)
-        slug.remove(first)
-        if last[0] + 1 == 7:
+        if last[0] + 1 == 8:
             next[0] = 0
         else:
             next[0] = last[0] + 1
 
-
-
-
-
-
+        
+    sense.set_pixel(next[0], next[1], purple)
+    sense.set_pixel(first[0], first[1], blank)
+    slug.append(next)
+    slug.remove(first)
+        
 #main program here----------------------------------
 sense.clear()
 while True:
     draw_slug()
+    sleep(0.5)
     move()
+
+    
