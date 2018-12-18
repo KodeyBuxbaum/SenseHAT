@@ -14,6 +14,7 @@ sense.set_pixel(4, 4, purple)
 white = (255, 255, 255)
 vegetables = []
 score = 0
+
 #functions here-------------------------
 def draw_slug():
     for segment in slug:
@@ -24,8 +25,7 @@ def move():
     last = slug[-1]
     first = slug[0]
     next = list(last)
-    
-    
+    remove = True
     if direction == "right":
         if last[0] + 1 == 8:
             next[0] = 0
@@ -46,23 +46,18 @@ def move():
             next[1] = 7
         else:
             next[1] = last[1] - 1
-    else:
-        pass
-
-        
-    
-    slug.append(next)
-    sense.set_pixel(next[0], next[1], purple)
-    sense.set_pixel(first[0], first[1], blank)
-    slug.remove(first)
-    """
     if next in vegetables:
         vegetables.remove(next)
         score = score + 1
-    #remove = True
+        if score % 5 == 0 and score > 0:
+             remove = False 
     if remove == True:
-        if score % 5 == 0:
-            sense.set_pixel(first[0], first[1], blank)
+        sense.set_pixel(first[0], first[1], blank)
+        slug.remove(first)
+    slug.append(next)
+    sense.set_pixel(next[0], next[1], purple)
+    sense.set_pixel(first[0], first[1], blank)
+        
     
 
 
@@ -78,9 +73,9 @@ def make_veg():
         x = randint(0, 7)
         y = randint(0, 7)
         new = [x, y]
-        vegetables.append(new)
-        sense.set_pixel(x,y, white)
-        """
+    vegetables.append(new)
+    sense.set_pixel(x,y, white)
+
 #main program here----------------------------------
 sense.clear()
 
@@ -88,7 +83,9 @@ while True:
     sleep(0.5)
     draw_slug()
     move()
-    
+    sense.stick.direction_any = joystick_moved
+    if len(vegetables) < 3:
+        make_veg()
 
 
 
