@@ -6,6 +6,9 @@ sense = SenseHat()
 #variables here-----------------------------------------
 direction = "right"
 purple = (205, 0, 255)
+red = (255, 0, 0)
+blue = (0, 0, 255)
+green = (0, 255, 0)
 blank = (0, 0, 0)
 slug = [[3,4], [4,4], [5, 4]]
 sense.set_pixel(2, 4, blank)
@@ -14,6 +17,8 @@ sense.set_pixel(4, 4, purple)
 white = (255, 255, 255)
 vegetables = []
 score = 0
+pause = 0.5
+dead = False
 
 #functions here-------------------------
 def draw_slug():
@@ -21,7 +26,9 @@ def draw_slug():
          sense.set_pixel(segment[0], segment[1], purple)
 
 def move():
+    global pause
     global score
+    global dead
     last = slug[-1]
     first = slug[0]
     next = list(last)
@@ -50,13 +57,22 @@ def move():
         vegetables.remove(next)
         score = score + 1
         if score % 5 == 0 and score > 0:
-             remove = False 
+            remove = False
+            pause = pause * 0.8
+        if score % 5 == 0 and score > 0:
+             remove = False
+    
     if remove == True:
         sense.set_pixel(first[0], first[1], blank)
         slug.remove(first)
+    if next in slug:
+        dead = True
     slug.append(next)
     sense.set_pixel(next[0], next[1], purple)
     sense.set_pixel(first[0], first[1], blank)
+    
+
+    
         
     
 
@@ -76,16 +92,20 @@ def make_veg():
     vegetables.append(new)
     sense.set_pixel(x,y, white)
 
+
+
 #main program here----------------------------------
 sense.clear()
-
 while True:
-    sleep(0.5)
-    draw_slug()
-    move()
-    sense.stick.direction_any = joystick_moved
-    if len(vegetables) < 3:
-        make_veg()
+    if dead == False:
+        sleep(pause)
+        draw_slug()
+        move()
+        sense.stick.direction_any = joystick_moved
+        if len(vegetables) < 3:
+            make_veg()
+    else:
+        sense.show_message("Your score was: " + str(score) + " Congrats!")
 
 
 
