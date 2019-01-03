@@ -6,9 +6,9 @@ sense = SenseHat()
 #variables here-----------------------------------------
 direction = "right"
 purple = (205, 0, 255)
-red = (255, 0, 0)
-blue = (0, 0, 255)
-green = (0, 255, 0)
+1 = randint(0, 255)
+2 = randint(0, 255)
+3 = randint(0, 255)
 blank = (0, 0, 0)
 slug = [[3,4], [4,4], [5, 4]]
 sense.set_pixel(2, 4, blank)
@@ -19,11 +19,13 @@ vegetables = []
 score = 0
 pause = 0.5
 dead = False
-
+colors = (1, 2, 3, purple)
 #functions here-------------------------
 def draw_slug():
     for segment in slug:
-         sense.set_pixel(segment[0], segment[1], purple)
+        while True:
+            sense.set_pixel(segment[0], segment[1], colors)
+            sleep(0.5)
 
 def move():
     global pause
